@@ -30,8 +30,8 @@ return [
             'class' => 'common\modules\moduleManager\components\ModuleManager',
 			'moduleAutoloadPaths' => [
 				'@common/modules', 
-				'@vendor/inspirenmy/ecommerce/src/common/modules', 
-				'@vendor/inspirenmy/user/src/common/modules',
+				'@vendor/inspirenmy/yii2-ecommerce/src/common/modules', 
+				'@vendor/inspirenmy/yii2-user/src/common/modules',
 				'@vendor/inspirenmy/yii2-core/src/common/modules',
 			],
         ],

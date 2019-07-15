@@ -3,6 +3,8 @@ namespace member;
 
 use UnitTester;
 use common\helpers\DateTime;
+use common\modules\subscription\models\SubscriptionPackage;
+use common\modules\subscription\models\SubscriptionPackageItem;
 
 class MemberBehaviorCest
 {
@@ -11,7 +13,6 @@ class MemberBehaviorCest
     }
 
     // tests
-	
     public function testActivateMembership(UnitTester $I)
     {
 		$user = $I->grabFixture('user')->getModel(0);
@@ -20,8 +21,95 @@ class MemberBehaviorCest
 		
 		$expectedDate = (new DateTime)->addDays(2)->setTimeAsEndOfDay();
 		
-		$I->assertEquals($expectedDate->format(DateTime::FORMAT_MYSQL), $user->membership->expire_at);
+		$I->assertEquals($expectedDate->format(DateTime::FORMAT_MYSQL), $user->membershipExpireAt);
     }
+	
+	public function testSubscribeMembershipPackage(UnitTester $I)
+    {
+		$user = $I->grabFixture('user')->getModel(0);
+		
+		$package = $this->createPackage();
+		
+		$bundle = $user->subscribeMembershipPackage($package->id);
+		$invoice = $bundle->invoice;
+		
+		$I->assertFalse($user->isMember);
+		
+		$expectedDate = (new DateTime)->addDays(365)->setTimeAsEndOfDay();
+		
+		$invoice->payManually($invoice->dueAmount);
+		
+		$I->assertTrue($user->isMember);
+		$I->assertEquals($expectedDate->format(DateTime::FORMAT_MYSQL), $user->membershipExpireAt);
+		
+		// Make it expire
+		$subscription = $bundle->getSubscriptions()->one();
+		$subscription->setExpireAtDays(-5);
+		if (!$subscription->save()) throw new \Exception(print_r($subscription, 1));
+		
+		$I->assertFalse($user->isMember);
+    }
+	
+	// If subscribe after expire, the expiry date of membership will be started from the date of subscription
+	public function testSubscribeMembershipPackageAgainAfterExpired(UnitTester $I)
+    {
+		$user = $I->grabFixture('user')->getModel(0);
+		
+		$package = $this->createPackage();
+		
+		$bundle = $user->subscribeMembershipPackage($package->id);
+		$invoice = $bundle->invoice;
+		
+		$expectedDate = (new DateTime)->addDays(365)->setTimeAsEndOfDay();
+		
+		$invoice->payManually($invoice->dueAmount);
+		
+		// Make it expire
+		$subscription = $bundle->getSubscriptions()->one();
+		$subscription->setExpireAtDays(-5);
+		if (!$subscription->save()) throw new \Exception(print_r($subscription, 1));
+		
+		// Subscribe the package again after expire
+		$bundle = $user->subscribeMembershipPackage($package->id);
+		$invoice = $bundle->invoice;
+		
+		$I->assertFalse($user->isMember);
+		
+		$expectedDate = (new DateTime)->addDays(365)->setTimeAsEndOfDay();
+		
+		$invoice->payManually($invoice->dueAmount);
+		
+		$I->assertTrue($user->isMember);
+		$I->assertEquals($expectedDate->format(DateTime::FORMAT_MYSQL), $user->membershipExpireAt);
+	}
+	
+	// If subscribe before expire, the expiry date of membership will be started from the expiry date of subscription
+	public function testSubscribeMembershipPackageAgainBeforeExpired(UnitTester $I)
+    {
+		$user = $I->grabFixture('user')->getModel(0);
+		
+		$package = $this->createPackage();
+		
+		$bundle = $user->subscribeMembershipPackage($package->id);
+		$invoice = $bundle->invoice;
+		
+		$expectedDate = (new DateTime)->addDays(365)->setTimeAsEndOfDay();
+		
+		$invoice->payManually($invoice->dueAmount);
+		
+		// Subscribe the package again after expire
+		$bundle = $user->subscribeMembershipPackage($package->id);
+		$invoice = $bundle->invoice;
+		
+		$I->assertTrue($user->isMember);
+		
+		$expectedDate = (new DateTime)->addDays(365 * 2)->setTimeAsEndOfDay();
+		
+		$invoice->payManually($invoice->dueAmount);
+		
+		$I->assertTrue($user->isMember);
+		$I->assertEquals($expectedDate->format(DateTime::FORMAT_MYSQL), $user->membershipExpireAt);
+	}
 	
     public function testGetIsMember(UnitTester $I)
     {
@@ -45,6 +133,31 @@ class MemberBehaviorCest
 		$I->assertEquals($expectedDate->format(DateTime::FORMAT_MYSQL), $user->membership->expire_at);
     }
 	
+	protected function createPackage() {
+		$package = new SubscriptionPackage;
+		$package->attributes = [
+			'name' => 'test package',
+			'subscription_identity' => 'member',
+			'price' => 360,
+		];
+		
+		if (!$package->save()) throw new \Exception('Failed. '.print_r($package->errors, 1));
+		
+		$packageItem = new SubscriptionPackageItem();
+		$packageItem->attributes = [
+			'subscription_identity' => 'member',
+			'name' => 'test subscription item',
+			'subscription_unit' => 0,
+			'subscription_days' => 1,
+			'content_valid_days' => 365,
+		];
+		$packageItem->package_id = $package->id;
+		
+		if (!$packageItem->save()) throw new \Exception('Failed. '.print_r($packageItem->errors, 1));
+		
+		return $package;
+	}
+	
 	public function _fixtures()
     {
         return [
@@ -52,6 +165,13 @@ class MemberBehaviorCest
                 'class' => \tests\fixtures\UserFixture::className(),
                 'dataFile' => '@tests/fixtures/data/user.php'
             ],
+            'userProfile' => [
+                'class' => \tests\fixtures\UserProfileFixture::className(),
+                'dataFile' => '@tests/fixtures/data/user_profile.php'
+            ],
+			'subscription' => [
+				'class' => \tests\fixtures\SubscriptionFixture::class,
+			],
         ];
     }
 }
