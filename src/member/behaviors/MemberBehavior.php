@@ -41,7 +41,7 @@ class MemberBehavior extends \yii\base\Behavior {
 	}
 	
 	public function subscribeMembershipPackage($subscriptionPackageId) {
-		$transaction = \Yii::$app->db->beginTransaction();
+		//$transaction = \Yii::$app->db->beginTransaction();
 		//try {
 			$package = SubscriptionPackage::findOne($subscriptionPackageId);
 			$bundle = $package->subscribe($this->owner, $this->getMembershipExpireAt());

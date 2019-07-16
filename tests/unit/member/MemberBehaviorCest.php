@@ -3,6 +3,7 @@ namespace member;
 
 use UnitTester;
 use common\helpers\DateTime;
+use common\modules\payment\models\Invoice;
 use common\modules\subscription\models\SubscriptionPackage;
 use common\modules\subscription\models\SubscriptionPackageItem;
 
@@ -39,6 +40,8 @@ class MemberBehaviorCest
 		
 		$invoice->payManually($invoice->dueAmount);
 		
+		$invoice = Invoice::findOne($invoice->id);
+		$I->assertTrue($invoice->id > 0);
 		$I->assertTrue($user->isMember);
 		$I->assertEquals($expectedDate->format(DateTime::FORMAT_MYSQL), $user->membershipExpireAt);
 		
