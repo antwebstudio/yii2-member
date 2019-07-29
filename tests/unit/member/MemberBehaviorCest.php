@@ -50,7 +50,12 @@ class MemberBehaviorCest
 		$subscription->setExpireAtDays(-5);
 		if (!$subscription->save()) throw new \Exception(print_r($subscription, 1));
 		
+		$I->assertTrue(isset($bundle->package_id));
+		$I->assertTrue(isset($subscription->package_id));
 		$I->assertFalse($user->isMember);
+		
+		$expectedDate = (new DateTime)->addDays(-5)->setTimeAsEndOfDay();
+		$I->assertEquals($expectedDate->format(DateTime::FORMAT_MYSQL), $user->membershipExpireAt);
     }
 	
 	// If subscribe after expire, the expiry date of membership will be started from the date of subscription
@@ -63,7 +68,7 @@ class MemberBehaviorCest
 		$bundle = $user->subscribeMembershipPackage($package->id);
 		$invoice = $bundle->invoice;
 		
-		$expectedDate = (new DateTime)->addDays(365)->setTimeAsEndOfDay();
+		//$expectedDate = (new DateTime)->addDays(365)->setTimeAsEndOfDay();
 		
 		$invoice->payManually($invoice->dueAmount);
 		
@@ -123,6 +128,20 @@ class MemberBehaviorCest
 		
 		$I->assertTrue($user->isMember);
     }
+	
+	public function testMembershipExpireAtNull(UnitTester $I) {
+		// Create subscription for user A
+		$user = $I->grabFixture('user')->getModel(0);
+		$package = $this->createPackage();
+		
+		$bundle = $user->subscribeMembershipPackage($package->id);
+		$invoice = $bundle->invoice;
+		$invoice->payManually($invoice->dueAmount);
+		
+		// User B should not have subscription data
+		$user = $I->grabFixture('user')->getModel(1);
+		$I->assertFalse(isset($user->membershipExpireAt));
+	}
 	
     public function testRenewDays(UnitTester $I)
     {

@@ -29,11 +29,21 @@ class MemberBehavior extends \yii\base\Behavior {
 			->one();
 	}
 	
+	protected function getLastExpireAndPaidSubscription($identity = null) {
+		return Subscription::find()->ownedBy($this->owner->id)
+			->type($identity)
+			->isPaid()
+			->orderBy('expire_date DESC')
+			->one();
+	}
+	
 	public function getMembershipExpireAt() {
 		$subscription = $this->getLastExpireAndActiveAndPaidSubscription($this->subscriptionIdentity);
 		
 		if (isset($subscription)) {
 			//throw new \Exception($subscription->id);
+			return $subscription->expire_date;
+		} else if ($subscription = $this->getLastExpireAndPaidSubscription($this->subscriptionIdentity)) {
 			return $subscription->expire_date;
 		} else if ($this->_getMembership() != null) {
 			return $this->_getMembership()->expire_at;
@@ -44,7 +54,10 @@ class MemberBehavior extends \yii\base\Behavior {
 		//$transaction = \Yii::$app->db->beginTransaction();
 		//try {
 			$package = SubscriptionPackage::findOne($subscriptionPackageId);
-			$bundle = $package->subscribe($this->owner, $this->getMembershipExpireAt());
+			
+			// If not expire yet, than extend from expire date, if already expired then extend from now.
+			$extendFrom = $this->isMember ? $this->getMembershipExpireAt() : null;
+			$bundle = $package->subscribe($this->owner, $extendFrom);
 			
 		//	$transaction->commit();
 			return $bundle;

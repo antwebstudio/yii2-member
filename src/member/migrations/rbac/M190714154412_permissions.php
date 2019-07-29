@@ -16,6 +16,12 @@ class M190714154412_permissions extends Migration
 				'index' => ['View My Account', [Role::ROLE_USER]],
 				'payment' => ['View My Account', [Role::ROLE_USER]],
 			],
+			\ant\member\backend\controllers\MemberController::class => [
+				'index' => ['View Member Account', [Role::ROLE_ADMIN]],
+				'payment' => ['View Member Account', [Role::ROLE_ADMIN]],
+				'subscription' => ['View Member Account', [Role::ROLE_ADMIN]],
+			],
+			
 		];
 		
 		parent::init();

@@ -6,5 +6,10 @@ return [
     'isCoreModule' => false,
 
 	'depends' => ['user'],
+	'modules' => [
+		'backend' => [
+			'class' => \ant\member\backend\Module::class,
+		],
+	],
 ];
 ?>
