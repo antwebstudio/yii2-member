@@ -169,9 +169,11 @@ class MemberBehaviorCest
 		$packageItem->attributes = [
 			'subscription_identity' => 'member',
 			'name' => 'test subscription item',
-			'subscription_unit' => 0,
-			'subscription_days' => 1,
-			'content_valid_days' => 365,
+			'unit' => 0,
+			'valid_period' => 365,
+			'valid_period_type' => 3,
+			'content_valid_period' => 365,
+			'content_valid_period_type' => 3,
 		];
 		$packageItem->package_id = $package->id;
 		

@@ -25,7 +25,7 @@ class MemberBehavior extends \yii\base\Behavior {
 		return Subscription::find()->currentlyActiveForUser($this->owner->id)
 			->type($identity)
 			->isPaid()
-			->orderBy('expire_date DESC')
+			->orderBy('expire_at DESC')
 			->one();
 	}
 	
@@ -33,7 +33,7 @@ class MemberBehavior extends \yii\base\Behavior {
 		return Subscription::find()->ownedBy($this->owner->id)
 			->type($identity)
 			->isPaid()
-			->orderBy('expire_date DESC')
+			->orderBy('expire_at DESC')
 			->one();
 	}
 	
@@ -41,10 +41,9 @@ class MemberBehavior extends \yii\base\Behavior {
 		$subscription = $this->getLastExpireAndActiveAndPaidSubscription($this->subscriptionIdentity);
 		
 		if (isset($subscription)) {
-			//throw new \Exception($subscription->id);
-			return $subscription->expire_date;
+			return $subscription->expire_at;
 		} else if ($subscription = $this->getLastExpireAndPaidSubscription($this->subscriptionIdentity)) {
-			return $subscription->expire_date;
+			return $subscription->expire_at;
 		} else if ($this->_getMembership() != null) {
 			return $this->_getMembership()->expire_at;
 		}

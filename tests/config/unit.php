@@ -3,6 +3,7 @@ return [
 	'id' => 'app-test',
 	'basePath' => dirname(__DIR__),
 	'aliases' => [
+		'ant' => dirname(dirname(__DIR__)).'/src',
 		'api' => dirname(dirname(__DIR__)).'/src/api',
 		'common/config' => __DIR__, // dirname(dirname(__DIR__)).'/vendor/inspirenmy/yii2-core/src/common/config',
 		//'common/modules/moduleManager' => dirname(dirname(__DIR__)).'/vendor/inspirenmy/yii2-core/src/common/modules/moduleManager',
@@ -29,10 +30,12 @@ return [
         'moduleManager' => [
             'class' => 'common\modules\moduleManager\components\ModuleManager',
 			'moduleAutoloadPaths' => [
+				'@ant',
 				'@common/modules', 
 				'@vendor/inspirenmy/yii2-ecommerce/src/common/modules', 
 				'@vendor/inspirenmy/yii2-user/src/common/modules',
 				'@vendor/inspirenmy/yii2-core/src/common/modules',
+				'@vendor/antweb/yii2-payment/src',
 			],
         ],
         /*'authManager' => [

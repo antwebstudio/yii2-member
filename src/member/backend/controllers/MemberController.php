@@ -22,7 +22,7 @@ class MemberController extends \yii\web\Controller {
 			$invoice = $bundle->invoice;
 
 			if ($invoice) {
-				return $this->redirect(['/payment/default/view', 'id' => $invoice->id]);
+				return $this->redirect($invoice->route);
 			} else {
 				throw new \Exception('Failed to create invoice. ');
 			}
