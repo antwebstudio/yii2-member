@@ -3,7 +3,7 @@
 namespace ant\member\models;
 
 use Yii;
-use common\modules\user\models\User;
+use ant\user\models\User;
 
 /**
  * This is the model class for table "member".

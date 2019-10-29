@@ -1,10 +1,10 @@
 <?php
 namespace ant\member\behaviors;
 
-use common\helpers\DateTime;
+use ant\helpers\DateTime;
 use ant\member\models\Member;
-use common\modules\subscription\models\Subscription;
-use common\modules\subscription\models\SubscriptionPackage;
+use ant\subscription\models\Subscription;
+use ant\subscription\models\SubscriptionPackage;
 
 class MemberBehavior extends \yii\base\Behavior {
 	public $subscriptionIdentity = 'member';
@@ -19,6 +19,16 @@ class MemberBehavior extends \yii\base\Behavior {
 	
 	public function getMembership() {
 		return $this->owner->hasOne(Member::class, ['user_id' => 'id']);
+	}
+	
+	public function getMembershipDepositAmount() {
+		$subscription = Subscription::find()->currentlyActiveForUser($this->owner->id)
+			->type($this->subscriptionIdentity)
+			//->isPaid()
+			->orderBy('expire_at DESC')
+			->one();
+		
+		return $subscription->subscriptionPackage->options['depositAmount'];
 	}
 	
 	protected function getLastExpireAndActiveAndPaidSubscription($identity = null) {

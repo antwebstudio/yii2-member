@@ -2,10 +2,10 @@
 namespace member;
 
 use UnitTester;
-use common\helpers\DateTime;
-use common\modules\payment\models\Invoice;
-use common\modules\subscription\models\SubscriptionPackage;
-use common\modules\subscription\models\SubscriptionPackageItem;
+use ant\helpers\DateTime;
+use ant\payment\models\Invoice;
+use ant\subscription\models\SubscriptionPackage;
+use ant\subscription\models\SubscriptionPackageItem;
 
 class MemberBehaviorCest
 {

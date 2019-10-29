@@ -10,7 +10,7 @@
     ],
     "minimum-stability": "stable",
     "require": {
-		"inspirenmy/yii2-user" : "*",
+		"antweb/yii2-user" : "*",
         "antweb/yii2-payment": "*",
         "antweb/yii2-subscription": "*"
 	},

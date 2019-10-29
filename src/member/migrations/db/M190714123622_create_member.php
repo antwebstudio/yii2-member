@@ -2,7 +2,7 @@
 
 namespace ant\member\migrations\db;
 
-use common\components\Migration;
+use ant\db\Migration;
 
 /**
  * Class M190714123622_create_member

@@ -39,7 +39,7 @@ return [
         'updated_at' => new \yii\db\Expression('NOW()'),
 		'registered_ip' => '127.0.0.1',
         'email' => 'user@example.org',
-		'status' => \common\modules\user\models\User::STATUS_ACTIVATED,
+		'status' => \ant\user\models\User::STATUS_ACTIVATED,
     ],
     'inactiveUser' => [
 		// Inactivated user

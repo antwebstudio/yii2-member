@@ -1,7 +1,7 @@
 <?php
 namespace ant\member\validators;
 
-use common\modules\user\models\User;
+use ant\user\models\User;
 
 class MembershipValidator extends \yii\validators\Validator {
     public $message = 'User is not member or membership expired.';

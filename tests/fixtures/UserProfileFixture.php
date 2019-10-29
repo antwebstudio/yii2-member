@@ -9,7 +9,7 @@ use yii\test\ActiveFixture;
  */
 class UserProfileFixture extends ActiveFixture
 {
-    public $modelClass = 'common\modules\user\models\UserProfile';
+    public $modelClass = 'ant\user\models\UserProfile';
 	public $depends = [
         'tests\fixtures\UserFixture',
         'tests\fixtures\ContactFixture',

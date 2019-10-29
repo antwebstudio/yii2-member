@@ -3,13 +3,13 @@
 namespace ant\member\controllers;
 
 use Yii;
-use common\modules\casey\models\Specification;
-use common\modules\order\models\Order;
-use common\modules\payment\models\Payment;
-use common\modules\contact\models\Contact;
-use common\modules\casey\models\SpecificationSearch;
-use common\modules\subscription\models\SubscriptionPackage;
-use common\modules\subscription\models\Subscription;
+use ant\casey\models\Specification;
+use ant\order\models\Order;
+use ant\payment\models\Payment;
+use ant\contact\models\Contact;
+use ant\casey\models\SpecificationSearch;
+use ant\subscription\models\SubscriptionPackage;
+use ant\subscription\models\Subscription;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;

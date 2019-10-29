@@ -1,7 +1,7 @@
 <?php
 use yii\helpers\Html;
 use yii\data\ActiveDataProvider;
-use common\modules\subscription\models\SubscriptionPackage;
+use ant\subscription\models\SubscriptionPackage;
 
 $dataProvider2 = new ActiveDataProvider([
 	'query' => SubscriptionPackage::find()->andWhere(['subscription_identity' => 'member']),

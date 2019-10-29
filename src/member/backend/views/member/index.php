@@ -1,6 +1,6 @@
 <?php
 use yii\helpers\Html;
-use common\modules\user\models\User;
+use ant\user\models\User;
 
 $dataProvider = new \yii\data\ActiveDataProvider([
 	'query' => User::find(),

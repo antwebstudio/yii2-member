@@ -9,5 +9,5 @@ use yii\test\ActiveFixture;
  */
 class UserFixture extends ActiveFixture
 {
-    public $modelClass = 'common\modules\user\models\User';
+    public $modelClass = 'ant\user\models\User';
 }

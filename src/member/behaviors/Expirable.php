@@ -1,7 +1,7 @@
 <?php
 namespace ant\member\behaviors;
 
-use common\helpers\DateTime;
+use ant\helpers\DateTime;
 
 class Expirable extends \yii\base\Behavior {
 	public $expireAtAttribute = 'expire_at';

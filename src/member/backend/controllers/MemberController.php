@@ -2,7 +2,7 @@
 namespace ant\member\backend\controllers;
 
 use Yii;
-use common\modules\user\models\User;
+use ant\user\models\User;
 
 class MemberController extends \yii\web\Controller {
 	public function actionIndex() {

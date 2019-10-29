@@ -9,5 +9,5 @@ use yii\test\ActiveFixture;
  */
 class ContactFixture extends ActiveFixture
 {
-    public $modelClass = 'common\modules\contact\models\Contact';
+    public $modelClass = 'ant\contact\models\Contact';
 }
