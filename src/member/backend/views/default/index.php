@@ -1,0 +1,1 @@
+<?= $this->render('@ant/member/backend/views/member/index', compact('dataProvider', 'model')) ?>

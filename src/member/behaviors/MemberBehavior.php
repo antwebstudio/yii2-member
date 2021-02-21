@@ -20,6 +20,10 @@ class MemberBehavior extends \yii\base\Behavior {
 	public function getMembership() {
 		return $this->owner->hasOne(Member::class, ['user_id' => 'id']);
 	}
+
+	public function getMembershipStatusText() {
+		return $this->isMember ? 'Active Member' : 'Membership Expired';
+	}
 	
 	public function getMembershipDepositAmount() {
 		$subscription = Subscription::find()->currentlyActiveForUser($this->owner->id)
@@ -63,6 +67,8 @@ class MemberBehavior extends \yii\base\Behavior {
 		//$transaction = \Yii::$app->db->beginTransaction();
 		//try {
 			$package = SubscriptionPackage::findOne($subscriptionPackageId);
+
+			if (!isset($package)) throw new \Exception('Package "'.$subscriptionPackageId.'" is not exist. ');
 			
 			// If not expire yet, than extend from expire date, if already expired then extend from now.
 			$extendFrom = $this->isMember ? $this->getMembershipExpireAt() : null;

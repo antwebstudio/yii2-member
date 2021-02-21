@@ -1,11 +1,8 @@
 <?php
 namespace ant\member\backend\controllers;
 
-class DefaultController extends \yii\web\Controller {
+use ant\user\models\User;
+use ant\user\models\UserSearch;
 
-    public function actionIndex($type = null) {
-
-        return $this->render($this->action->id, [
-        ]);
-    }
+class DefaultController extends \ant\member\backend\controllers\MemberController {
 }
